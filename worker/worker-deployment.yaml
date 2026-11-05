@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: worker
+  template:
+    metadata:
+      labels:
+        app: worker
+    spec:
+      containers:
+        - name: worker
+          image: YOUR_DOCKER_USERNAME_HERE/demucs-worker:v1
+          imagePullPolicy: IfNotPresent
+          env:
+            - { name: REDIS_HOST, value: redis }
+            - { name: REDIS_PORT, value: "6379" }
+            - { name: MINIO_ENDPOINT, value: minio:9000 }
+            - name: MINIO_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: minio-credentials
+                  key: username
+            - name: MINIO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: minio-credentials
+                  key: password
+            - { name: QUEUE_BUCKET, value: queue }
+            - { name: OUTPUT_BUCKET, value: output }
+          resources:
+            requests: { cpu: "1", memory: 6Gi }
+            limits: { memory: 8Gi }
