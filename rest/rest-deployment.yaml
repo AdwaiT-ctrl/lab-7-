@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: rest
-          image: YOUR_DOCKER_USERNAME_HERE/demucs-rest:v1
+          image: us-central1-docker.pkg.dev/endless-dialect-506516-t9/demucs/demucs-rest:v1
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5000

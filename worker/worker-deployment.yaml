@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: worker
-          image: YOUR_DOCKER_USERNAME_HERE/demucs-worker:v1
+          image: us-central1-docker.pkg.dev/endless-dialect-506516-t9/demucs/demucs-worker:v1
           imagePullPolicy: IfNotPresent
           env:
             - { name: REDIS_HOST, value: redis }
