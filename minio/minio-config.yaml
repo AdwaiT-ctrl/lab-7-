@@ -1,3 +1,6 @@
+# Legacy Helm values retained from the original tutorial scaffold.
+# The active deployment uses minio-deployment.yaml and does not read this file.
+# Set active server credentials with the minio-credentials Kubernetes Secret.
 mode: standalone
 
 ## Set default rootUser, rootPassword

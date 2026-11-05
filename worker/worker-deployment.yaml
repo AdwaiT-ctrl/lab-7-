@@ -4,6 +4,11 @@ metadata:
   name: worker
 spec:
   replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
   selector:
     matchLabels:
       app: worker
@@ -14,7 +19,7 @@ spec:
     spec:
       containers:
         - name: worker
-          image: us-central1-docker.pkg.dev/endless-dialect-506516-t9/demucs/demucs-worker:v1
+          image: us-central1-docker.pkg.dev/endless-dialect-506516-t9/demucs/demucs-worker:v2
           imagePullPolicy: IfNotPresent
           env:
             - { name: REDIS_HOST, value: redis }

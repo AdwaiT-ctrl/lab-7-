@@ -1,7 +1,22 @@
-# Min.io README
+# MinIO deployment
 
-I found it useful to deploy [min.io](http://min.io) locally using the [directions in the Kubernetes tutorial](https://github.com/cu-csci-4253-datacenter/kubernetes-tutorial/tree/master/06-minio). This gave me a standalone environment that didn't need access to Google Object Store or S3.
+The active MinIO deployment is defined by `minio-deployment.yaml` and
+`minio-external-service.yaml`. Despite the service filename, the service is a
+normal in-cluster `ClusterIP` service named `minio`; REST and worker pods reach
+the S3 API at `minio:9000`.
 
-To do this, just follow the  [directions in the Kubernetes tutorial](https://github.com/cu-csci-4253-datacenter/kubernetes-tutorial/tree/master/06-minio) and set up an `ExternalName` service definition -- that will let you specify the Min.io host as `minio` in your applications.
+The deployment uses a 20 GiB persistent volume claim and the public
+`cgr.dev/chainguard/minio:latest` image. Its non-root container writes to the
+volume using the pod's `fsGroup: 65532` setting. Create the credentials before
+applying the deployment:
 
-We've copied that specification and the Helm configuration file from  [the Kubernetes tutorial](https://github.com/cu-csci-4253-datacenter/kubernetes-tutorial/tree/master/06-minio) -- if you modify things, you might want to document that here.
+```sh
+kubectl create secret generic minio-credentials \
+  --from-literal=username='YOUR_MINIO_USERNAME' \
+  --from-literal=password='YOUR_LONG_MINIO_PASSWORD'
+```
+
+The REST API creates the `queue` and `output` buckets on first use. The
+`minio-config.yaml` file is retained from the original Helm tutorial scaffold;
+the current deployment does not consume it. Credentials for the active
+deployment come only from the `minio-credentials` Kubernetes Secret.
